@@ -1,8 +1,7 @@
 import { generateDOMedLayout } from "../../toolKit/utils.js";
 
 const generateFullRouteOverallsDataLayout = () => {
-  return `
-    <section class="trip-main__trip-info  trip-info">
+  return `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
 
@@ -23,7 +22,7 @@ export default class FullRouteOverallsDataLayout {
     return generateFullRouteOverallsDataLayout();
   }
   getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
+    if (!this._DOMedLayout) {
       this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
     }
     return this._DOMedLayout;
