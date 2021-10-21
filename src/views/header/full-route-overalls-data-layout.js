@@ -22,7 +22,7 @@ export default class FullRouteOverallsDataLayout {
     return generateFullRouteOverallsDataLayout();
   }
   getDOMedLayout() {  // so-called getElement
-    if (!this._DOMedLayout) {
+    if (this._DOMedLayout === null) {
       this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
     }
     return this._DOMedLayout;

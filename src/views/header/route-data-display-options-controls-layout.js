@@ -1,6 +1,7 @@
-export const generateRouteDataDisplayOptionsControlsLayout = () => {
-  return `
-  <div class="trip-main__trip-controls  trip-controls">
+import { generateDOMedLayout } from "../../toolKit/utils";
+
+const generateRouteDataDisplayOptionsControlsLayout = () => {
+  return `<div class="trip-main__trip-controls  trip-controls">
   <h2 class="visually-hidden">Switch trip view</h2>
   <nav class="trip-controls__trip-tabs  trip-tabs">
     <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
@@ -27,3 +28,20 @@ export const generateRouteDataDisplayOptionsControlsLayout = () => {
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 };
+export default class RouteDataDisplayOptionsControlsLayout {
+  constructor() {
+    this._DOMedLayout = null;
+  }
+  getStringLayout() { // so-called getTemplate
+    return generateRouteDataDisplayOptionsControlsLayout();
+  }
+  getDOMedLayout() {  // so-called getElement
+    if (this._DOMedLayout === null) {
+      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
+    }
+    return this._DOMedLayout;
+  }
+  clearDOMedLayoutHolder() {  // so-called removeElement
+    this._DOMedLayout = null;
+  }
+}

@@ -121,7 +121,6 @@ export const mocks = {
       for (let i = 0; i < qnt; i++) {
         mockRoutePoints.push(mocks.methods.getMockFilledRoutePoint());
       }
-      console.log(mockRoutePoints);
       return mockRoutePoints;
     }
   }
