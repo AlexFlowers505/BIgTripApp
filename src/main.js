@@ -12,6 +12,7 @@ import TripEventsSortTableLayout from "./views/main/trip-events-sort-table-layou
 //  //  // main
 import RouteItemsWrapper from "./views/main/route-items-wrapper";
 import FoldedRouteItemLayout from "./views/main/folded-route-item-layout";
+import RouteItemAdditionalOfferLayout from "./views/main/route-item-insides/route-item-additional-offer";
 import RouteItemEditFormLayout from "./views/main/route-item-edit-form";
 import RouteItemNewForm from "./views/main/route-item-new-form";
 
@@ -32,60 +33,74 @@ const htmlRefs = {
   routeDataDisplayOptionsControlsWrapper: document.querySelector(`.trip-main__trip-controls`),
   tripEventsSection: document.querySelector(`.trip-events`),
 };
+const routeItemsWrapperComponent = new RouteItemsWrapper().getDOMedLayout();
+function renderTask (dataHolder) {
+  const foldedRouteItemComponent = new FoldedRouteItemLayout(dataHolder);
 
-
-//  //  // main
-
-function renderPage (givenRouteItems) {
-  //  //  // header
-  // render(htmlRefs.headerWholeDataWrapper, generateFullRouteOverallsDataLayout(), `afterbegin`);
-  insertDOMedLayout(htmlRefs.headerWholeDataWrapper, new FullRouteOverallsDataLayout().getDOMedLayout(), RenderPosition.AFTERBEGIN);
-  // теперь вставку можно осуществлять, указывая в качестве layoutWrapper-а — например, отрендеренный до этого routeItemsWrapper.
-  // т.е., сначала мы рендерим этот будущий layout wrapper:
-  // создаем const routeItemsWrapperComponent = new RouteItemsWrapperLayout(); (который можно переименовать в RouteItemsWrapperView)
-  // далее, делаем вызов RouteItemsWrapperComponent.getDOMedLayout(), используя его вторым аргументом функции insertDOMedLayout()
-  // и теперь мы можем использовать этот же RouteItemsWrapperComponent.getDOMedLayout() в качестве первого аргумента той же функции
-  // т.е. этот элемент уже в ДОМе, и теперь, метод routeItemsWrapperComponent.getDOMedLayout(), будучи на месте параметра layoutWrapper будет просто-напросто указывать на этот элемент в доме по принципу действия того же document.querySelector(), вот и всё
-  // я все так же хуй знает нахуй это все вообще нужно делать, но тем не менее, вот так вот это все может теперь работать
-
-  // удаление элемента со страницы будет вьюха.getElement.remove() (стандартный метод ДОМовых элементов)
-  // а удаление из этого хуй знает где находящегося виртуального рендера будет – вьюха.removeElement();
-
-  insertDOMedLayout(htmlRefs.routeDataDisplayOptionsControlsWrapper, new RouteDataDisplayOptionsControlsLayout().getDOMedLayout(), RenderPosition.AFTERBEGIN);
-  insertDOMedLayout(htmlRefs.tripEventsSection, new TripEventsSortTableLayout().getDOMedLayout(), RenderPosition.BEFOREEND);
-  const routeItemsWrapperComponent = new RouteItemsWrapper().getDOMedLayout(); // почему-то работает как альтернатива `document.querySelector(`.trip-events__list`); // unable to get it before render to be put in htmlRefs`
-  // видимо несмотря на слово `new`, поскольку это  `const`, все равно обращение идет каждый раз не к новому экземпляру, а все к тому же единожды созданному при инициализации переменной const. И если объявить другую переменую с такой же правой чатсью после `=`, вот это уже будет другой экземляр. Или типа того
-  // соответственно, обращаясь к new RouteItemsWrapp().getDOMedLayout() вне переменной, ты, по идее, точно так же обратишься к новому, а не к существующему экземпляру
-  insertDOMedLayout(htmlRefs.tripEventsSection, routeItemsWrapperComponent, RenderPosition.BEFOREEND);
-    for (let aRouteItem of givenRouteItems) { // render multiple routeItems
-      insertDOMedLayout(routeItemsWrapperComponent, new FoldedRouteItemLayout(aRouteItem).getDOMedLayout(), RenderPosition.BEFOREEND);
-      // render additional offers
-      aRouteItem.additionalOffers.forEach( anOffer => {
-          let additionalOffersLastRenderedWrapper = document.querySelectorAll(`.event__selected-offers`)[document.querySelectorAll(`.event__selected-offers`).length-1];
-          render_n_insertStringLayout(additionalOffersLastRenderedWrapper, generateRouteItemAdditionalOfferLayout(anOffer), `beforeend`);
-      })
-      // define if farovite
-      if (aRouteItem.isFavorite) {
-        document.querySelectorAll(`.event__favorite-btn`)[document.querySelectorAll(`.event__favorite-btn`).length-1].classList.add(`event__favorite-btn--active`);
+  (function watchEditFormClick () {
+    const routeItemEditFormComponent = new RouteItemEditFormLayout(dataHolder);
+    const currentItemData = dataHolder;
+    const onEscKeyDown = (anEvt) => {
+      if (anEvt.key === `Escape` || anEvt.key === `Esc`) {
+        anEvt.preventDefault();
+        switchToFoldedRouteItemView(anEvt);
+        document.removeEventListener(`keydown`, onEscKeyDown);
       }
     }
-  //  //  // render edit form
-  function renderEditForm (givenRouteItem) {
-    insertDOMedLayout(routeItemsWrapperComponent, new RouteItemEditFormLayout(givenRouteItem).getDOMedLayout(), RenderPosition.AFTERBEGIN);
+    const switchToEditRouteItemView = () => {
+      routeItemsWrapperComponent.replaceChild(routeItemEditFormComponent.getDOMedLayout(), foldedRouteItemComponent.getDOMedLayout());
+      (function matchAdditionalOffersInEditForm() {
+        // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemEditFormLayout(givenRouteItem).getDOMedLayout(), RenderPosition.AFTERBEGIN);
+        currentItemData.additionalOffers.forEach( anOffer => {
+          switch (anOffer.name) {
+            case `Add luggage` : routeItemEditFormComponent.getDOMedLayout().querySelector(`#event-offer-luggage-1`).setAttribute(`checked`, ``); break;  // и даже если будет открыто несколько форм, обращение по routeItemEditFormComponent.getDOMedLayout() все равно ПОЧЕМУ-то будет находить форму нужного routeItem-а
+            case `Switch to comfort Class` : routeItemEditFormComponent.getDOMedLayout().querySelector(`#event-offer-comfort-1`).setAttribute(`checked`, ``); break;
+            case `Add meal` : routeItemEditFormComponent.getDOMedLayout().querySelector(`#event-offer-meal-1`).setAttribute(`checked`, ``); break;
+            case `Choose seats` : routeItemEditFormComponent.getDOMedLayout().querySelector(`#event-offer-seats-1`).setAttribute(`checked`, ``); break;
+            case `Travel by train` : routeItemEditFormComponent.getDOMedLayout().querySelector(`#event-offer-train-1`).setAttribute(`checked`, ``); break;
+          }
+        })
+      })();
+    }
+    const switchToFoldedRouteItemView = (anEvt) => {
+      anEvt.preventDefault();
+      routeItemsWrapperComponent.replaceChild(foldedRouteItemComponent.getDOMedLayout(), routeItemEditFormComponent.getDOMedLayout());
+    }
 
-    givenRouteItem.additionalOffers.forEach( anOffer => {
-      switch (anOffer.name) {
-        case `Add luggage` : document.querySelector(`#event-offer-luggage-1`).setAttribute(`checked`, ``); break;
-        case `Switch to comfort Class` : document.querySelector(`#event-offer-comfort-1`).setAttribute(`checked`, ``); break;
-        case `Add meal` : document.querySelector(`#event-offer-meal-1`).setAttribute(`checked`, ``); break;
-        case `Choose seats` : document.querySelector(`#event-offer-seats-1`).setAttribute(`checked`, ``); break;
-        case `Travel by train` : document.querySelector(`#event-offer-train-1`).setAttribute(`checked`, ``); break;
-      }
+    // adding the watchers
+    foldedRouteItemComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+      switchToEditRouteItemView();
+      document.addEventListener(`keydown`, onEscKeyDown) // ну и почему мы ничего не передаем аргументом в колбэк? всм почему все рабоает при том, что мы не передаем этот аргумент? видать замыкание, но ведь мы даже и (evt)+>{} не прописали. ???
+    });
+    routeItemEditFormComponent.getDOMedLayout().querySelector(`.event.event--edit`).addEventListener(`submit`, (evt) => {
+      switchToFoldedRouteItemView(evt);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+  })();
+  (function actuallyRender () {
+    insertDOMedLayout(routeItemsWrapperComponent, foldedRouteItemComponent.getDOMedLayout(), RenderPosition.BEFOREEND);
+    // render additional offers
+    dataHolder.additionalOffers.forEach( anOffer => {
+        const additionalOffersLastRenderedWrapper = foldedRouteItemComponent.getDOMedLayout().querySelector(`.event__selected-offers`);
+        insertDOMedLayout(additionalOffersLastRenderedWrapper, new RouteItemAdditionalOfferLayout(anOffer).getDOMedLayout(), RenderPosition.BEFOREEND);
     })
-  };
-  renderEditForm(givenRouteItems[0]);
+    // define if farovite
+    if (dataHolder.isFavorite) {
+      foldedRouteItemComponent.getDOMedLayout().querySelector(`.event__favorite-btn`).classList.add(`event__favorite-btn--active`);
+      // а раньше было foldedRouteItemComponent.querySelector(`.event__favorite-btn`)[document.querySelectorAll(`.event__favorite-btn`).length-1]
+    }
+  })();
+}
+function renderPage (givenRouteItems) {
+  insertDOMedLayout(htmlRefs.headerWholeDataWrapper, new FullRouteOverallsDataLayout().getDOMedLayout(), RenderPosition.AFTERBEGIN);
+  insertDOMedLayout(htmlRefs.routeDataDisplayOptionsControlsWrapper, new RouteDataDisplayOptionsControlsLayout().getDOMedLayout(), RenderPosition.AFTERBEGIN);
+  insertDOMedLayout(htmlRefs.tripEventsSection, new TripEventsSortTableLayout().getDOMedLayout(), RenderPosition.BEFOREEND);
+
+  insertDOMedLayout(htmlRefs.tripEventsSection, routeItemsWrapperComponent, RenderPosition.BEFOREEND);
+    for (let aRouteItem of givenRouteItems) { renderTask(aRouteItem) }
   // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
 };
-// 01:58
-renderPage(mocks.methods.getMockFilledRoutePoints(5));
-console.log(mocks.methods.getMockFilledRoutePoint());
+
+(function bedazzle() {
+  renderPage(mocks.methods.getMockFilledRoutePoints(5));
+})();
