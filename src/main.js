@@ -11,6 +11,7 @@ import TripEventsSortTableLayout from "./views/main/trip-events-sort-table-layou
 
 //  //  // main
 import RouteItemsWrapper from "./views/main/route-items-wrapper";
+import EmptyRouteItemsWrapperCTA from "./views/main/EmptyRouteItemsWrapperCTA";
 import FoldedRouteItemLayout from "./views/main/folded-route-item-layout";
 import RouteItemAdditionalOfferLayout from "./views/main/route-item-insides/route-item-additional-offer";
 import RouteItemEditFormLayout from "./views/main/route-item-edit-form";
@@ -76,8 +77,13 @@ function renderTask (dataHolder) {
       switchToFoldedRouteItemView(evt);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
+    routeItemEditFormComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+      switchToFoldedRouteItemView(evt);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
   })();
-  (function actuallyRender () {
+  (function actuallyRenderGivenTasks () {
     insertDOMedLayout(routeItemsWrapperComponent, foldedRouteItemComponent.getDOMedLayout(), RenderPosition.BEFOREEND);
     // render additional offers
     dataHolder.additionalOffers.forEach( anOffer => {
@@ -97,10 +103,19 @@ function renderPage (givenRouteItems) {
   insertDOMedLayout(htmlRefs.tripEventsSection, new TripEventsSortTableLayout().getDOMedLayout(), RenderPosition.BEFOREEND);
 
   insertDOMedLayout(htmlRefs.tripEventsSection, routeItemsWrapperComponent, RenderPosition.BEFOREEND);
-    for (let aRouteItem of givenRouteItems) { renderTask(aRouteItem) }
+  for (let aRouteItem of givenRouteItems) { renderTask(aRouteItem) }
+  (function checkIfNoTasks () {
+    const emptyRouteItemsWrapperCTAcomponent = new EmptyRouteItemsWrapperCTA().getDOMedLayout();
+    if (routeItemsWrapperComponent.querySelectorAll(`.trip-events__item`).length <= 0) {
+      insertDOMedLayout(routeItemsWrapperComponent, emptyRouteItemsWrapperCTAcomponent, RenderPosition.AFTERBEGIN);
+    } else {
+      emptyRouteItemsWrapperCTAcomponent.remove();
+    }
+  })();
   // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
 };
 
 (function bedazzle() {
   renderPage(mocks.methods.getMockFilledRoutePoints(5));
 })();
+
