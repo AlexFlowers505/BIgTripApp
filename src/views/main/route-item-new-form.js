@@ -1,8 +1,8 @@
-import { generateDOMedLayout } from "../../toolKit/utils";
+import Abstract from "../toolKit/abstract";
 import dayjs from "dayjs";
 
 
-export const generateRouteItemNewForm = (dataHolder) => {
+const generateRouteItemNewForm = (dataHolder) => {
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -176,20 +176,8 @@ const emptyRoutePoint = {
   endDateTime: dayjs().add(1, `day`).toDate(),
 };
 
-export default class RouteItemNewForm {
-  constructor(givenRouteItem) {
-    this._DOMedLayout = null;
-  }
-  getStringLayout() { // so-called getTemplate
+export default class RouteItemNewForm extends Abstract {
+  getStringLayout() {
     return generateRouteItemNewForm(emptyRoutePoint);
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }

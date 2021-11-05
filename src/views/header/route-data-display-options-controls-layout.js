@@ -1,4 +1,4 @@
-import { generateDOMedLayout } from "../../toolKit/utils";
+import Abstract from "../toolKit/abstract";
 
 const generateRouteDataDisplayOptionsControlsLayout = () => {
   return `<div class="trip-main__trip-controls  trip-controls">
@@ -28,20 +28,9 @@ const generateRouteDataDisplayOptionsControlsLayout = () => {
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 };
-export default class RouteDataDisplayOptionsControlsLayout {
-  constructor() {
-    this._DOMedLayout = null;
-  }
+
+export default class RouteDataDisplayOptionsControlsLayout extends Abstract {
   getStringLayout() { // so-called getTemplate
     return generateRouteDataDisplayOptionsControlsLayout();
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }

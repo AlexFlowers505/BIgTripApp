@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-import { generateDOMedLayout } from "../../toolKit/utils";
+import Abstract from "../toolKit/abstract";
 
 const generateRouteItemEditFormLayout = (dataHolder) => {
   return `<li class="trip-events__item">
@@ -166,21 +166,12 @@ const generateRouteItemEditFormLayout = (dataHolder) => {
 </li>`;
 };
 
-export default class RouteItemEditFormLayout {
+export default class RouteItemEditFormLayout extends Abstract {
   constructor(givenRouteItem) {
-    this._DOMedLayout = null;
+    super();
     this._routeData = givenRouteItem;
   }
-  getStringLayout() { // so-called getTemplate
+  getStringLayout() {
     return generateRouteItemEditFormLayout(this._routeData);
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }

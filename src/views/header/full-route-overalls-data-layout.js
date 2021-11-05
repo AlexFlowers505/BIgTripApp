@@ -1,4 +1,4 @@
-import { generateDOMedLayout } from "../../toolKit/utils.js";
+import Abstract from "../toolKit/abstract";
 
 const generateFullRouteOverallsDataLayout = () => {
   return `<section class="trip-main__trip-info  trip-info">
@@ -14,20 +14,8 @@ const generateFullRouteOverallsDataLayout = () => {
     </section>`;
 };
 
-export default class FullRouteOverallsDataLayout {
-  constructor() {
-    this._DOMedLayout = null; // so-called _element
-  }
-  getStringLayout() { // so-called getTemplate
+export default class FullRouteOverallsDataLayout extends Abstract {
+  getStringLayout() {
     return generateFullRouteOverallsDataLayout();
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }

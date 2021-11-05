@@ -1,5 +1,4 @@
-import { generateDOMedLayout } from "../../../toolKit/utils"
-
+import Abstract from "../../toolKit/abstract";
 
 const generateRouteItemAdditionalOfferLayout = (dataHolder) => {
   return `<li class="event__offer">
@@ -9,40 +8,12 @@ const generateRouteItemAdditionalOfferLayout = (dataHolder) => {
           </li>`
 }
 
-export default class RouteItemAdditionalOfferLayout {
+export default class RouteItemAdditionalOfferLayout extends Abstract {
   constructor(givenRouteItem) {
-    this._DOMedLayout = null;
+    super();
     this._routeOffersData = givenRouteItem;
   }
   getStringLayout() { // so-called getTemplate
     return generateRouteItemAdditionalOfferLayout(this._routeOffersData);
   }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
-  }
 }
-
-// export default class FoldedRouteItemLayout {
-//   constructor(givenRouteItem) {
-//     this._DOMedLayout = null;
-//     this._routeData = givenRouteItem;
-//   }
-//   getStringLayout() { // so-called getTemplate
-//     return generateFoldedRouteItemLayout(this._routeData);
-//   }
-//   getDOMedLayout() {  // so-called getElement
-//     if (this._DOMedLayout === null) {
-//       this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-//     }
-//     return this._DOMedLayout;
-//   }
-//   clearDOMedLayoutHolder() {  // so-called removeElement
-//     this._DOMedLayout = null;
-//   }
-// }

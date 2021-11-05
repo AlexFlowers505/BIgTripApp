@@ -1,4 +1,4 @@
-import { generateDOMedLayout } from "../../toolKit/utils";
+import Abstract from "../toolKit/abstract";
 
 const generateTripEventsSortTableLayout = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -29,20 +29,8 @@ const generateTripEventsSortTableLayout = () => {
           </form>`;
 };
 
-export default class TripEventsSortTableLayout {
-  constructor() {
-    this._DOMedLayout = null;
-  }
-  getStringLayout() { // so-called getTemplate
+export default class TripEventsSortTableLayout extends Abstract {
+  getStringLayout() {
     return generateTripEventsSortTableLayout();
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }
