@@ -16,7 +16,7 @@ const generateFullRouteOverallsDataLayout = () => {
 
 export default class FullRouteOverallsDataLayout {
   constructor() {
-    this._DOMedLayout = null;
+    this._DOMedLayout = null; // so-called _element
   }
   getStringLayout() { // so-called getTemplate
     return generateFullRouteOverallsDataLayout();
