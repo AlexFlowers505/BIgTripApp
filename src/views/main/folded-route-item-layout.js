@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-import { generateDOMedLayout } from "../../toolKit/utils";
+import Abstract from "../toolKit/abstract";
+
 
 const generateFoldedRouteItemLayout = (dataHolder) => {
   return `<li class="trip-events__item">
@@ -39,21 +40,12 @@ const generateFoldedRouteItemLayout = (dataHolder) => {
   </li>`;
 };
 
-export default class FoldedRouteItemLayout {
+export default class FoldedRouteItemLayout extends Abstract {
   constructor(givenRouteItem) {
-    this._DOMedLayout = null;
+    super();
     this._routeData = givenRouteItem;
-  }
-  getStringLayout() { // so-called getTemplate
+}
+  getStringLayout() {
     return generateFoldedRouteItemLayout(this._routeData);
-  }
-  getDOMedLayout() {  // so-called getElement
-    if (this._DOMedLayout === null) {
-      this._DOMedLayout = generateDOMedLayout(this.getStringLayout());
-    }
-    return this._DOMedLayout;
-  }
-  clearDOMedLayoutHolder() {  // so-called removeElement
-    this._DOMedLayout = null;
   }
 }
