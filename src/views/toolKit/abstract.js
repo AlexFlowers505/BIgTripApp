@@ -1,4 +1,4 @@
-import { generateDOMedLayout } from "../../toolKit/utils";
+import { generateDOMedLayout } from "../../toolKit/render";
 
 export default class Abstract {
   constructor() {

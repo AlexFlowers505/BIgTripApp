@@ -23,7 +23,7 @@ import { generateRouteItemAdditionalOfferLayout } from "./views/main/route-item-
 //  // toolKit
 import { mocks } from "./toolKit/mocks";
 // import { render } from "./toolKit/render";
-import { render_n_insertStringLayout, insertDOMedLayout, RenderPosition } from "./toolKit/render";
+import { insertDOMedLayout, RenderPosition, replace, remove } from "./toolKit/render";
 
 
 // the script
@@ -49,7 +49,7 @@ function renderTask (dataHolder) {
       }
     }
     const switchToEditRouteItemView = () => {
-      routeItemsWrapperComponent.replaceChild(routeItemEditFormComponent.getDOMedLayout(), foldedRouteItemComponent.getDOMedLayout());
+      replace(routeItemEditFormComponent, foldedRouteItemComponent);
       (function matchAdditionalOffersInEditForm() {
         // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemEditFormLayout(givenRouteItem).getDOMedLayout(), RenderPosition.AFTERBEGIN);
         currentItemData.additionalOffers.forEach( anOffer => {
@@ -63,8 +63,8 @@ function renderTask (dataHolder) {
         })
       })();
     }
-    const switchToFoldedRouteItemView = (anEvt) => {
-      routeItemsWrapperComponent.replaceChild(foldedRouteItemComponent.getDOMedLayout(), routeItemEditFormComponent.getDOMedLayout());
+    const switchToFoldedRouteItemView = () => {
+      replace(foldedRouteItemComponent, routeItemEditFormComponent);
     }
 
     // adding the watchers
@@ -111,7 +111,7 @@ function renderPage (givenRouteItems) {
       emptyRouteItemsWrapperCTAcomponent.remove();
     }
   })();
-  insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
+  // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
 };
 
 (function bedazzle() {

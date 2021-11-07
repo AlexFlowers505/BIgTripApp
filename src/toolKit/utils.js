@@ -12,11 +12,7 @@ export const utils = {
       },
   }
 }
-export const generateDOMedLayout = (layout) => {
-  const dOMedLayout = document.createElement(`div`);
-  dOMedLayout.innerHTML = layout;
-  return dOMedLayout.firstChild;
-}
+
 
 
 
