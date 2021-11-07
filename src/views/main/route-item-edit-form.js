@@ -183,7 +183,7 @@ export default class RouteItemEditFormLayout extends Abstract {
   }
   setRollUpBtnClickHandler(cb) { // вызовем в main.js
     this._callbacksHolder.rollUpBtnClick = cb;  // в унаследованное св-во _callback, которое является пустым объектом, добавляем св-во click и присваиваем ему значение cb, что является ссылкой на функцию-коллбэк, которую мы пропишем при последующем вызове setClickHandler (для возможности в последствии найти и обратиться к этому обработчику, чтобы снять его, после того, как он отработает)
-    this.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollUpBtnClickHandler); // крч эта функция сводится к тому, что 1) сохраняем коллбэк в переменную (чтобы потом, когда надо, удалить) 2) прописываем обработчик, к которому привязываем этот самый коллбэк. Только технически это вот так заморочено выглядит. Если бы не evt.preventDefault(), то здесь же можно было прописать так же просто, как в этом комменте и написано. Почему бы же не прописать этот самый evt.preventDefault() в самом коллбэке, зачем его выносить отдельно, из-за чего появляется необходимость создавать отдельную функцию и получается вот такая запутанная цепочка в которой я сижу и разбираюсь по 20 минут? Может параметр evt не получится вынести?
+    this.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollUpBtnClickHandler); // крч эта функция сводится к тому, что 1) сохраняем коллбэк в переменную (чтобы потом, когда надо, удалить) 2) прописываем обработчик, к которому привязываем этот самый коллбэк. Только технически это вот так заморочено выглядит. Если бы не evt.preventDefault(), то здесь же можно было прописать так же просто, как в этом комменте и написано. Почему бы же не прописать этот самый evt.preventDefault() в самом коллбэке, зачем его выносить отдельно, из-за чего появляется необходимость создавать отдельную функцию и получается вот такая запутанная цепочка в которой я сижу и разбираюсь по 20 минут? Может параметр evt не получится вынести? Ну да, и что же это, каждый раз, когда нужен будет параметр, мне половину коллбэка там, половину, где нужны параметры, здесь прописывать?
   }
   // handle submit click
   _submitClickHandler(evt) {
@@ -192,9 +192,8 @@ export default class RouteItemEditFormLayout extends Abstract {
   }
   setSubmitClickHandler(cb) {
     this._callbacksHolder.submitClick = cb;
-    // this.getDOMedLayout().querySelector(`.`)
+    this.getDOMedLayout().querySelector(`.event.event--edit`).addEventListener(`submit`, this._submitClickHandler);
   }
-
 }
 
 // routeItemEditFormComponent.setClickHandler(()=>{

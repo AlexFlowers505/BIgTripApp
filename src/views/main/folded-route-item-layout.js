@@ -44,8 +44,18 @@ export default class FoldedRouteItemLayout extends Abstract {
   constructor(givenRouteItem) {
     super();
     this._routeData = givenRouteItem;
-}
+    this._rollOutBtnClickHandler = this._rollOutBtnClickHandler.bind(this);
+  }
   getStringLayout() {
     return generateFoldedRouteItemLayout(this._routeData);
+  }
+  // handle roll out btn click
+  _rollOutBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callbacksHolder.rollOutBtnClick();
+  }
+  setRollOutBtnClickHandler(cb) {
+    this._callbacksHolder.rollOutBtnClick = cb;
+    this.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollOutBtnClickHandler);
   }
 }

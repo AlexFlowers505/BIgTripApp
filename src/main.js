@@ -68,22 +68,18 @@ function renderTask (dataHolder) {
     }
 
     // adding the watchers
-    foldedRouteItemComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+    foldedRouteItemComponent.setRollOutBtnClickHandler(()=> {
       switchToEditRouteItemView();
-      document.addEventListener(`keydown`, onEscKeyDown) // ну и почему мы ничего не передаем аргументом в колбэк? всм почему все рабоает при том, что мы не передаем этот аргумент? видать замыкание, но ведь мы даже и (evt)+>{} не прописали. ???
-    });
-    routeItemEditFormComponent.getDOMedLayout().querySelector(`.event.event--edit`).addEventListener(`submit`, (evt) => {
-      switchToFoldedRouteItemView(evt);
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-    routeItemEditFormComponent.setRollUpBtnClickHandler(()=>{
+      document.addEventListener(`keydown`, onEscKeyDown)
+    })
+    routeItemEditFormComponent.setSubmitClickHandler(()=>{
       switchToFoldedRouteItemView();
       document.removeEventListener(`keydown`, onEscKeyDown);
     })
-    // routeItemEditFormComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      // switchToFoldedRouteItemView(evt);
-      // document.removeEventListener(`keydown`, onEscKeyDown);
-    // });
+    routeItemEditFormComponent.setRollUpBtnClickHandler(()=>{ // по сути прописываем коллбэк здесь, но его запуск и сохранение в переменную (и доп.команда evt.preventDefault() происходят уже в самом объекте компонента)
+      switchToFoldedRouteItemView();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    })
 
   })();
   (function actuallyRenderGivenTasks () {
@@ -115,7 +111,7 @@ function renderPage (givenRouteItems) {
       emptyRouteItemsWrapperCTAcomponent.remove();
     }
   })();
-  // insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
+  insertDOMedLayout(routeItemsWrapperComponent, new RouteItemNewForm().getDOMedLayout(), RenderPosition.AFTERBEGIN);
 };
 
 (function bedazzle() {
