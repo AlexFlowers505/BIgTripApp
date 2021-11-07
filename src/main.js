@@ -64,7 +64,6 @@ function renderTask (dataHolder) {
       })();
     }
     const switchToFoldedRouteItemView = (anEvt) => {
-      anEvt.preventDefault();
       routeItemsWrapperComponent.replaceChild(foldedRouteItemComponent.getDOMedLayout(), routeItemEditFormComponent.getDOMedLayout());
     }
 
@@ -77,10 +76,14 @@ function renderTask (dataHolder) {
       switchToFoldedRouteItemView(evt);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-    routeItemEditFormComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
-      switchToFoldedRouteItemView(evt);
+    routeItemEditFormComponent.setRollUpBtnClickHandler(()=>{
+      switchToFoldedRouteItemView();
       document.removeEventListener(`keydown`, onEscKeyDown);
-    });
+    })
+    // routeItemEditFormComponent.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, (evt) => {
+      // switchToFoldedRouteItemView(evt);
+      // document.removeEventListener(`keydown`, onEscKeyDown);
+    // });
 
   })();
   (function actuallyRenderGivenTasks () {

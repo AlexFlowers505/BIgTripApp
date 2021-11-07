@@ -170,8 +170,34 @@ export default class RouteItemEditFormLayout extends Abstract {
   constructor(givenRouteItem) {
     super();
     this._routeData = givenRouteItem;
+    this._rollUpBtnClickHandler = this._rollUpBtnClickHandler.bind(this); // я так понимаю, мы биндим _rollUpBtnClickHandler, описанный ниже. А зачем мы это делаем? Ну всм он же и так у нас здесь записан ниже. Мы просто сохраняем метод _rollUpBtnClickHandler в вот этом св-ве _rollUpBtnClickHandler. Чтобы что? Видимо только через нее можно будет удалить этот обработчик, потому что сама работа обработчика уже реализована без участия этой переменной
+    this._submitClickHandler = this._submitClickHandler.bind(this);
   }
   getStringLayout() {
     return generateRouteItemEditFormLayout(this._routeData);
   }
+  // handle roll up btn click
+  _rollUpBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callbacksHolder.rollUpBtnClick();
+  }
+  setRollUpBtnClickHandler(cb) { // вызовем в main.js
+    this._callbacksHolder.rollUpBtnClick = cb;  // в унаследованное св-во _callback, которое является пустым объектом, добавляем св-во click и присваиваем ему значение cb, что является ссылкой на функцию-коллбэк, которую мы пропишем при последующем вызове setClickHandler (для возможности в последствии найти и обратиться к этому обработчику, чтобы снять его, после того, как он отработает)
+    this.getDOMedLayout().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollUpBtnClickHandler); // крч эта функция сводится к тому, что 1) сохраняем коллбэк в переменную (чтобы потом, когда надо, удалить) 2) прописываем обработчик, к которому привязываем этот самый коллбэк. Только технически это вот так заморочено выглядит. Если бы не evt.preventDefault(), то здесь же можно было прописать так же просто, как в этом комменте и написано. Почему бы же не прописать этот самый evt.preventDefault() в самом коллбэке, зачем его выносить отдельно, из-за чего появляется необходимость создавать отдельную функцию и получается вот такая запутанная цепочка в которой я сижу и разбираюсь по 20 минут? Может параметр evt не получится вынести?
+  }
+  // handle submit click
+  _submitClickHandler(evt) {
+    evt.preventDefault();
+    this._callbacksHolder.submitClick();
+  }
+  setSubmitClickHandler(cb) {
+    this._callbacksHolder.submitClick = cb;
+    // this.getDOMedLayout().querySelector(`.`)
+  }
+
 }
+
+// routeItemEditFormComponent.setClickHandler(()=>{
+//   switchToFoldedRouteItemView();
+//   document.removeEventListener(`keydown`, onEscKeyDown);
+// })

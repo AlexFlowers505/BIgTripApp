@@ -6,6 +6,7 @@ export default class Abstract {
       throw new Error(`Don't use Abstract class / instances of it, use its' children with "extends" keyword`)
     }
     this._DOMedLayout = null;
+    this._callbacksHolder = {};  //  будет сохранять ссылку на конкретный коллбэк для возможности его последующего удаления
   }
   getStringLayout() {
     throw new Error(`Redefine body of Abstract class's method "getStringLayout"`)
