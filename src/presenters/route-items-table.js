@@ -1,20 +1,20 @@
 //  imports
 //  //  views
 //  // //  header
-import FullRouteOverallsDataLayout from "../header/full-route-overalls-data-layout";
-import RouteDataDisplayOptionsControlsLayout from "../header/route-data-display-options-controls-layout";
+import FullRouteOverallsDataLayout from "../views/header/full-route-overalls-data-layout";
+import RouteDataDisplayOptionsControlsLayout from "../views/header/route-data-display-options-controls-layout";
 //  //  //  body
-import TripEventsSortTableLayout from "../main/trip-events-sort-table-layout";
-import EmptyRouteItemsWrapperCTA from "../main/EmptyRouteItemsWrapperCTA";
-import RouteItemsWrapper from "../main/route-items-wrapper";
-import RouteItemNewForm from "../main/route-item-new-form";
-import RouteItemEditFormLayout from "../main/route-item-edit-form";
-import FoldedRouteItemLayout from "../main/folded-route-item-layout";
-import RouteItemAdditionalOfferLayout from "../main/route-item-insides/route-item-additional-offer";
+import TripEventsSortTableLayout from "../views/main/trip-events-sort-table-layout";
+import EmptyRouteItemsWrapperCTA from "../views/main/EmptyRouteItemsWrapperCTA";
+import RouteItemsWrapper from "../views/main/route-items-wrapper";
+import RouteItemNewForm from "../views/main/route-item-new-form";
+import RouteItemEditFormLayout from "../views/main/route-item-edit-form";
+import FoldedRouteItemLayout from "../views/main/folded-route-item-layout";
+import RouteItemAdditionalOfferLayout from "../views/main/route-item-insides/route-item-additional-offer";
 //  //  presenters
 import RouteItem from "./route-item";
 //  //  render
-import {insertDOMedLayout, RenderPosition, replace, remove} from "../../toolKit/render.js";
+import {insertDOMedLayout, RenderPosition, replace, remove} from "../toolKit/render.js";
 
 // export
 export default class RouteItemsTable {
@@ -25,6 +25,9 @@ export default class RouteItemsTable {
     this._headerWholeDataWrapper = document.querySelector(`.trip-main`);
     this._routeDataDisplayOptionsControlsWrapper = document.querySelector(`.trip-main__trip-controls`);
     this._tripEventsSection = document.querySelector(`.trip-events`);
+
+    this._routeItemsIDs = {};
+    this._handleRouteItemChange = this._handleRouteItemChange.bind(this);
 
     this._fullRouteOverallsDataLayoutComponent = new FullRouteOverallsDataLayout();
     this._routeDataDisplayOptionsControlsLayoutComponent = new RouteDataDisplayOptionsControlsLayout();
@@ -104,13 +107,24 @@ export default class RouteItemsTable {
   _renderRouteItem(dataHolder) {
     const routeItemPresenter = new RouteItem(dataHolder);
     routeItemPresenter.init();
+    this._routeItemsIDs[dataHolder.id] = routeItemPresenter;
   }
   _renderRouteItems() {
     this._routeItems.slice().forEach((anItem)=>this._renderRouteItem(anItem));
   };
+  _clearRouteItemsWrapper() {
+    Object
+    .values(this._routeItemsIDs)
+    .forEach((presenter)=> presenter.destroy());
+    this._routeItemsIDs = {};
+  }
   _renderEmptyRouteItemsWrapperCTA() {
       insertDOMedLayout(this._routeItemsWrapperComponent, this._emptyRouteItemsWrapperCTAComponent, RenderPosition.AFTERBEGIN);
   };
+  _handleRouteItemChange(updatedItem) {
+    this._routeItems = updateItem(this._routeItems, updatedItem);
+    this.routePresenter[updatedItem.id].init(updatedItem);
+  }
   _renderRouteItemsTable() {
     if (this._routeItems.length < 1) {
       this._renderEmptyRouteItemsWrapperCTA();

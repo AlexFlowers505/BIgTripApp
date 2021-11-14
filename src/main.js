@@ -2,7 +2,7 @@
 // imports
 //  //  presenters
 
-import RouteItemsTable from "./views/presenters/route-items-table";
+import RouteItemsTable from "./presenters/route-items-table";
 //  // views imports
 
 //  //  // header

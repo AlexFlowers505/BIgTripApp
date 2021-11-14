@@ -64,6 +64,7 @@ export const mocks = {
     routePointsQnt: 5
   },
   methods: {
+    generateId() { return Date.now() + parseInt(Math.random() * 10000, 10)},
     getRoutePointRandomDescription(minSentences, maxSentences, sentences) {
       const description = [];
       const sentenceIndexes = [...utils.methods.getUniqueSetOfRandomNumbers(0, sentences.length-1, utils.methods.getRandomNumber(minSentences, maxSentences))];
@@ -105,6 +106,7 @@ export const mocks = {
     },
     getMockFilledRoutePoint() {
       const mockRoutePoint = Object.assign({}, mocks.routePointTemplate);
+      mockRoutePoint.id = mocks.methods.generateId();
       mockRoutePoint.type = mocks.mockData.routePointTypes[utils.methods.getRandomNumber(0, mocks.mockData.routePointTypes.length-1)];
       mockRoutePoint.destinationName = mocks.mockData.destinationNames[utils.methods.getRandomNumber(0, mocks.mockData.destinationNames.length-1)];
       mockRoutePoint.additionalOffers = mocks.methods.getRandomAdditionalOffers(mocks.noMagic.additionalOffersLimit);
